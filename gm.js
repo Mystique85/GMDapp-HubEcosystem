@@ -121,27 +121,6 @@
         }
     }
 
-    async function checkContractHealth(network) {
-        try {
-            if (!signer || currentNetworkId !== network.chainId) return false;
-            
-            const contract = new ethers.Contract(network.contractAddress, GM_ABI, provider);
-            
-            try {
-                const fee = await contract.getGmFee();
-                console.log(`✅ ${network.name} contract is healthy, fee: ${ethers.utils.formatEther(fee)} ${network.currency}`);
-                return true;
-            } catch (error) {
-                console.error(`❌ ${network.name} contract error:`, error.message);
-                return false;
-            }
-            
-        } catch (error) {
-            console.error(`Error checking ${network.name} contract:`, error);
-            return false;
-        }
-    }
-
     async function checkBalance(network) {
         try {
             if (!signer || currentNetworkId !== network.chainId) return;
@@ -151,11 +130,6 @@
             const balanceEth = ethers.utils.formatEther(balance);
             
             console.log(`💰 Balance on ${network.name}: ${balanceEth} ${network.currency}`);
-            
-            const isHealthy = await checkContractHealth(network);
-            if (!isHealthy) {
-                return false;
-            }
             
             const contract = new ethers.Contract(network.contractAddress, GM_ABI, provider);
             const fee = await contract.getGmFee();
@@ -191,13 +165,11 @@
                     <span class="networkIndicator badge bg-secondary ms-2">Switch Network</span>
                 </div>
                 <p>Chain ID: ${net.chainId}</p>
-                <p>Contract: <span class="small">${net.contractAddress}</span></p>
                 <p>Status: <span class="statusText">—</span></p>
                 <p>GM Fee: <span class="feeEth">—</span></p>
                 <p>🔥 Streak: <span class="streak">—</span></p>
                 <p>💬 Total GM: <span class="totalGm">—</span></p>
                 <button class="switchNetworkBtn btn btn-outline-primary w-100 mb-2">Switch to ${net.name}</button>
-                <button class="checkHealthBtn btn btn-outline-info w-100 mb-2">Check Health</button>
                 <button class="fetchFeeBtn btn text-white w-100 mb-2" style="background-color:${net.buttonColor}" disabled>Check Fee</button>
                 <button class="sayGmBtn btn text-white w-100" style="background-color:${net.buttonColor}" disabled>Say GM ☀️</button>
                 <p class="txStatus small">—</p>
@@ -257,41 +229,11 @@
         NETWORKS.forEach(net => {
             const root = net._dom;
             const switchBtn = root.querySelector(".switchNetworkBtn");
-            const healthBtn = root.querySelector(".checkHealthBtn");
             const fetchBtn = root.querySelector(".fetchFeeBtn");
             const sayBtn = root.querySelector(".sayGmBtn");
 
             fetchBtn.disabled = false;
             sayBtn.disabled = false;
-            healthBtn.disabled = false;
-
-            if (!healthBtn._attached) {
-                healthBtn.addEventListener("click", async () => {
-                    healthBtn.disabled = true;
-                    root.querySelector(".statusText").textContent = "Checking contract health...";
-                    
-                    try {
-                        if (currentNetworkId !== net.chainId) {
-                            root.querySelector(".statusText").textContent = "Switch network first!";
-                            healthBtn.disabled = false;
-                            return;
-                        }
-                        
-                        const isHealthy = await checkContractHealth(net);
-                        
-                        if (isHealthy) {
-                            root.querySelector(".statusText").textContent = "Contract healthy ✅";
-                        } else {
-                            root.querySelector(".statusText").textContent = "Contract not working ❌";
-                        }
-                    } catch (err) {
-                        root.querySelector(".statusText").textContent = `Error: ${err.message}`;
-                    } finally {
-                        healthBtn.disabled = false;
-                    }
-                });
-                healthBtn._attached = true;
-            }
 
             if (!switchBtn._attached) {
                 switchBtn.addEventListener("click", async () => {
@@ -353,8 +295,8 @@
 
                         const hasFunds = await checkBalance(net);
                         if (!hasFunds) {
-                            root.querySelector(".statusText").textContent = "Insufficient funds or contract issue ❌";
-                            root.querySelector(".txStatus").textContent = "Check contract health or add more funds";
+                            root.querySelector(".statusText").textContent = "Insufficient funds ❌";
+                            root.querySelector(".txStatus").textContent = "Add more funds to your wallet";
                             sayBtn.disabled = false;
                             return;
                         }
@@ -414,7 +356,6 @@
         NETWORKS.forEach(net => {
             const root = net._dom;
             root.querySelector(".switchNetworkBtn").disabled = false;
-            root.querySelector(".checkHealthBtn").disabled = true;
             root.querySelector(".fetchFeeBtn").disabled = true;
             root.querySelector(".sayGmBtn").disabled = true;
             root.querySelector(".statusText").textContent = "—";
@@ -461,5 +402,5 @@
     connectBtn.addEventListener("click", connectWallet);
     disconnectBtn.addEventListener("click", disconnectWallet);
     
-    console.log("🚀 GM Hub FINAL UI initialized with new Celo contract");
+    console.log("🚀 GM Hub CLEAN UI initialized");
 })();
