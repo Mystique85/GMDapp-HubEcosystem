@@ -2,6 +2,10 @@
 
 A multi-chain decentralized application (DApp) that allows users to send "GM" messages across multiple blockchain networks with a small fee. Built for the Base, Celo, and Optimism ecosystems.
 
+## 🚀 Live Application
+
+**🌐 Live Demo: [https://gm-dapp-hub-ecosystem.vercel.app/](https://gm-dapp-hub-ecosystem.vercel.app/)**
+
 ## 🚀 Features
 
 - **Multi-Chain Support**: Connect and interact with Base, Celo, and Optimism networks
@@ -45,15 +49,3 @@ Each network has its own deployed contract with the following features:
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🤝 Contributing
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📞 Contact
-
-Project Link: [https://github.com/your-username/gm-hub-dapp](https://github.com/your-username/gm-hub-dapp)
