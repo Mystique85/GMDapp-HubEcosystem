@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "echo 'Build completed - static site'",
-    "dev": "npx serve ."
+    "build": "mkdir -p public && cp index.html gm.js public/ 2>/dev/null || true && cp -r img/ public/ 2>/dev/null || true && echo 'Build completed - static site'",
+    "dev": "npx serve public"
   },
   "dependencies": {},
   "devDependencies": {
